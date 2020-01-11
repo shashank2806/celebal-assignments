@@ -13,7 +13,7 @@ mycursor = mydb.cursor()
 
 sql = "SELECT data1.ID, data1.Cities,data1.Pincode,data1.Office_ID, data2.Population\
   FROM data1 \
-  INNER JOIN data2 ON data1.ID = data2.ID"
+  INNER JOIN data2 ON data1.Office_ID = data2.Office_ID"
 
 mycursor.execute(sql)
 
@@ -31,3 +31,13 @@ mycursor.executemany(sql2, val)
 mydb.commit()
 
 # Groupby Pincode
+result = []
+mycursor.execute("select Pincode, SUM(Population) FROM merged_data WHERE Cities='Jaipur' GROUP BY Pincode")
+myresult = mycursor.fetchall()
+for x in myresult:
+    result.append(str(x))
+# print(result)
+
+with open('result.txt', 'w') as f:
+    f.writelines(result)
+
