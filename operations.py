@@ -1,10 +1,10 @@
 import mysql.connector
 
 mydb = mysql.connector.connect(
-  host="localhost",
-  user="user1",
-  passwd="passwd",
-  database="db1"
+    host="localhost",
+    user="user1",
+    passwd="passwd",
+    database="db1"
 )
 
 
@@ -25,19 +25,18 @@ mycursor.execute("TRUNCATE table merged_data")
 sql2 = "INSERT INTO merged_data (ID,Cities,Pincode,Office_ID, Population) VALUES (%s, %s, %s, %s, %s)"
 val = []
 for x in myresult:
-    val.append(x) 
+    val.append(x)
 mycursor.executemany(sql2, val)
 
 mydb.commit()
 
 # Groupby Pincode
-result = []
-mycursor.execute("select Pincode, SUM(Population) FROM merged_data WHERE Cities='Jaipur' GROUP BY Pincode")
+mycursor.execute(
+    "select Pincode, SUM(Population) FROM merged_data WHERE Cities='Jaipur' GROUP BY Pincode")
 myresult = mycursor.fetchall()
-for x in myresult:
-    result.append(str(x))
-# print(result)
+# for x in myresult:
+#     print(x[0], x[1])
 
 with open('result.txt', 'w') as f:
-    f.writelines(result)
-
+    for x in myresult:
+        f.write(f'{x[0]}: {x[1]} \n')
